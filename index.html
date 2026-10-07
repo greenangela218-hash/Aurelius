@@ -1,0 +1,3130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>NairaVault — Grow, Earn & Manage</title>
+  <!-- Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ---------- RESET & VARIABLES ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0b0f17;
+      --bg-elevated: #121826;
+      --card-bg: rgba(22, 28, 40, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --text-primary: #f0f3fa;
+      --text-secondary: #9aa4b8;
+      --accent: #00d68f;
+      --accent-dim: rgba(0, 214, 143, 0.15);
+      --accent-glow: 0 0 20px rgba(0, 214, 143, 0.3);
+      --danger: #ff5c5c;
+      --warning: #f0b34b;
+      --info: #4d8cff;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    body.light {
+      --bg: #f5f7fc;
+      --bg-elevated: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(0, 0, 0, 0.06);
+      --text-primary: #0a0e17;
+      --text-secondary: #5a6479;
+      --accent: #009e6b;
+      --accent-dim: rgba(0, 158, 107, 0.1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    /* ---------- UTILITY ---------- */
+    .glass {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .glass:hover {
+      border-color: rgba(0, 214, 143, 0.2);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+    }
+
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .badge-accent {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .badge-warning {
+      background: rgba(240, 179, 75, 0.15);
+      color: var(--warning);
+    }
+
+    .badge-info {
+      background: rgba(77, 140, 255, 0.15);
+      color: var(--info);
+    }
+
+    .badge-danger {
+      background: rgba(255, 92, 92, 0.15);
+      color: var(--danger);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0b0f17;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--accent-glow);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+
+    /* ---------- HEADER ---------- */
+    .main-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 23, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 12px 0;
+    }
+
+    body.light .main-header {
+      background: rgba(245, 247, 252, 0.85);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0b0f17;
+      font-size: 1.1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      font-size: 1.1rem;
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      padding: 60px 0 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 214, 143, 0.06), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      max-width: 800px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 .highlight {
+      color: var(--accent);
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .demo-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(240, 179, 75, 0.12);
+      border: 1px solid rgba(240, 179, 75, 0.25);
+      color: var(--warning);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    /* ---------- DASHBOARD PREVIEW ---------- */
+    .dashboard-preview {
+      margin-top: 48px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      padding: 24px;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .preview-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      transition: var(--transition);
+    }
+
+    .preview-card .label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .preview-card .value {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .preview-card .value.accent {
+      color: var(--accent);
+    }
+
+    /* ---------- SECTIONS (LANDING) ---------- */
+    .landing-section {
+      padding: 64px 0;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .plan-card-mini {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .plan-card-mini:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .plan-card-mini .amount {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .plan-card-mini .name {
+      font-weight: 600;
+      margin: 4px 0;
+    }
+
+    .plan-card-mini .reward {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .rewards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .reward-card {
+      padding: 24px;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+    }
+
+    .reward-card i {
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .reward-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .reward-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--glass-border);
+      padding: 16px 0;
+    }
+
+    .faq-item summary {
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item summary::after {
+      content: '\f067';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      color: var(--accent);
+      transition: var(--transition);
+    }
+
+    .faq-item[open] summary::after {
+      content: '\f068';
+    }
+
+    .faq-item p {
+      color: var(--text-secondary);
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+
+    /* ---------- REGISTRATION MODAL / AUTH ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--bg-elevated);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      max-width: 480px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal h2 {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .modal .sub {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 214, 143, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-error {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    /* ---------- DASHBOARD ---------- */
+    .dashboard {
+      display: none;
+      padding: 24px 0;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+    }
+
+    .balance-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .balance-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card .label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .balance-card .amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .balance-card .amount.accent {
+      color: var(--accent);
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .quick-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    .quick-action:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .quick-action i {
+      font-size: 1.3rem;
+    }
+
+    .chart-container {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .chart-container canvas {
+      max-height: 200px;
+    }
+
+    .activity-list {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .activity-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-item .desc {
+      font-size: 0.9rem;
+    }
+
+    .activity-item .desc small {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    .activity-item .amt {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .activity-item .amt.positive {
+      color: var(--accent);
+    }
+
+    .activity-item .amt.negative {
+      color: var(--danger);
+    }
+
+    .sidebar-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-card h4 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-card .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .sidebar-card .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar-card .stat-row .value {
+      font-weight: 600;
+    }
+
+    /* ---------- PLANS PAGE (dashboard section) ---------- */
+    .page-section {
+      display: none;
+      padding: 24px 0;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    .plans-grid-full {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .plan-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .plan-card .plan-amount {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .plan-card .plan-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 4px 0 12px;
+    }
+
+    .plan-card ul {
+      list-style: none;
+      margin: 12px 0 20px;
+      flex: 1;
+    }
+
+    .plan-card ul li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .plan-card ul li i {
+      color: var(--accent);
+      font-size: 0.7rem;
+    }
+
+    /* ---------- TASK MARKETPLACE ---------- */
+    .task-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .filter-chip {
+      padding: 6px 16px;
+      border-radius: 50px;
+      border: 1px solid var(--glass-border);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .filter-chip.active,
+    .filter-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .task-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .task-card:hover {
+      border-color: var(--accent);
+    }
+
+    .task-card .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .task-card .task-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .task-card .task-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      flex: 1;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .task-reward {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    /* ---------- AFFILIATE ---------- */
+    .affiliate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .affiliate-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .affiliate-img {
+      width: 100%;
+      height: 120px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #1a2332, #0f1520);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    /* ---------- AIRTIME/DATA ---------- */
+    .network-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .network-btn {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      background: var(--card-bg);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .network-btn.active,
+    .network-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .data-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .data-card .size {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .data-card .price {
+      font-weight: 600;
+      margin: 4px 0 8px;
+    }
+
+    /* ---------- SUBSCRIPTIONS ---------- */
+    .sub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .sub-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sub-card .sub-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--accent-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    /* ---------- ORDERS ---------- */
+    .order-card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .status-flow {
+      display: flex;
+      gap: 4px;
+      margin-top: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .status-step {
+      flex: 1;
+      text-align: center;
+      padding: 6px 4px;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+    }
+
+    .status-step.done {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .status-step.current {
+      background: var(--accent);
+      color: #0b0f17;
+    }
+
+    /* ---------- TRANSACTIONS TABLE ---------- */
+    .tx-table-wrap {
+      overflow-x: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 4px;
+    }
+
+    .tx-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 600px;
+    }
+
+    .tx-table th {
+      text-align: left;
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .tx-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .tx-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tx-table .amt-pos {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tx-table .amt-neg {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    /* ---------- NOTIFICATIONS ---------- */
+    .notif-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      margin-bottom: 10px;
+    }
+
+    .notif-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* ---------- PROFILE ---------- */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #007a52);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0b0f17;
+    }
+
+    .warning-banner {
+      background: rgba(255, 92, 92, 0.08);
+      border: 1px solid rgba(255, 92, 92, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--danger);
+      margin-bottom: 20px;
+    }
+
+    /* ---------- BOTTOM NAV (MOBILE) ---------- */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(11, 15, 23, 0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--glass-border);
+      padding: 8px 0;
+      z-index: 150;
+      justify-content: space-around;
+    }
+
+    body.light .bottom-nav {
+      background: rgba(245, 247, 252, 0.95);
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      padding: 4px 12px;
+      transition: var(--transition);
+    }
+
+    .bottom-nav-item.active,
+    .bottom-nav-item:hover {
+      color: var(--accent);
+    }
+
+    .bottom-nav-item i {
+      font-size: 1.1rem;
+    }
+
+    /* ---------- TOAST ---------- */
+    .toast-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: var(--bg-elevated);
+      border: 1px solid var(--glass-border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      min-width: 280px;
+      box-shadow: var(--shadow);
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.fade-out {
+      animation: slideOut 0.3s ease forwards;
+    }
+
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .bottom-nav {
+        display: flex;
+      }
+
+      body {
+        padding-bottom: 80px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .balance-cards {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .header-actions .btn span {
+        display: none;
+      }
+
+      .modal {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== TOAST CONTAINER ========== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ========== HEADER ========== -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <div class="logo" onclick="showPage('landing')">
+        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+        <span>NairaVault</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#" onclick="showPage('landing'); return false;">Home</a>
+        <a href="#plans" onclick="showPage('landing'); return false;">Plans</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Support</a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="openAuthModal('login')">Login</button>
+        <button class="btn btn-primary btn-sm" onclick="openAuthModal('register')">
+          <i class="fas fa-user-plus"></i> <span>Create Account</span>
+        </button>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== LANDING PAGE ========== -->
+  <main id="landingPage">
+    <section class="hero container">
+      <div class="demo-banner">
+        <i class="fas fa-flask"></i> Demo Mode — No real money is transferred
+      </div>
+      <h1>Grow, Earn, Subscribe & Manage <span class="highlight">Everything</span> in One Place.</h1>
+      <p>Explore investment simulations, complete rewarding tasks, manage subscriptions, and access everyday digital services from one dashboard.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="openAuthModal('register')">
+          <i class="fas fa-rocket"></i> Get Started Free
+        </button>
+        <button class="btn btn-outline" onclick="openAuthModal('login')">
+          <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+        </button>
+      </div>
+
+      <!-- Dashboard Preview -->
+      <div class="dashboard-preview">
+        <div class="flex-between" style="margin-bottom:16px;">
+          <span style="font-weight:600;">Dashboard Preview</span>
+          <span class="badge badge-accent">Simulated</span>
+        </div>
+        <div class="preview-grid">
+          <div class="preview-card">
+            <div class="label">Available Balance</div>
+            <div class="value accent">₦12,450</div>
+          </div>
+          <div class="preview-card">
+            <div class="label">Total Deposits</div>
+            <div class="value">₦8,000</div>
+          </div>
+          <div class="preview-card">
+            <div class="label">Simulated Rewards</div>
+            <div class="value accent">₦3,200</div>
+          </div>
+          <div class="preview-card">
+            <div class="label">Pending Rewards</div>
+            <div class="value">₦750</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Investment Plans Preview -->
+    <section class="landing-section container" id="plans">
+      <h2 class="section-title">Investment & Task Plans</h2>
+      <p class="section-sub">Start small, complete daily tasks, and track your simulated rewards.</p>
+      <div class="plans-grid">
+        <div class="plan-card-mini">
+          <div class="amount">₦1,000</div>
+          <div class="name">Starter</div>
+          <div class="reward">5% daily reward · 7 days</div>
+        </div>
+        <div class="plan-card-mini">
+          <div class="amount">₦2,000</div>
+          <div class="name">Basic</div>
+          <div class="reward">6% daily reward · 10 days</div>
+        </div>
+        <div class="plan-card-mini">
+          <div class="amount">₦3,000</div>
+          <div class="name">Growth</div>
+          <div class="reward">7% daily reward · 14 days</div>
+        </div>
+        <div class="plan-card-mini">
+          <div class="amount">₦4,000</div>
+          <div class="name">Advanced</div>
+          <div class="reward">8% daily reward · 21 days</div>
+        </div>
+        <div class="plan-card-mini">
+          <div class="amount">₦6,000</div>
+          <div class="name">Premium</div>
+          <div class="reward">10% daily reward · 30 days</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rewards -->
+    <section class="landing-section container">
+      <h2 class="section-title">Rewards & Benefits</h2>
+      <p class="section-sub">Earn simulated rewards for completing simple digital tasks.</p>
+      <div class="rewards-grid">
+        <div class="reward-card">
+          <i class="fas fa-bullhorn"></i>
+          <h3>Affiliate Marketing</h3>
+          <p>Promote products and earn simulated commissions on every tracked click.</p>
+        </div>
+        <div class="reward-card">
+          <i class="fas fa-share-alt"></i>
+          <h3>Social Media Engagement</h3>
+          <p>Like, share, and comment on promotional posts for instant rewards.</p>
+        </div>
+        <div class="reward-card">
+          <i class="fas fa-poll"></i>
+          <h3>Surveys & Discovery</h3>
+          <p>Share your opinion on products and services. Quick and easy.</p>
+        </div>
+        <div class="reward-card">
+          <i class="fas fa-users"></i>
+          <h3>Referral Activities</h3>
+          <p>Invite friends and earn a percentage of their simulated activity.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="landing-section container">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-sub">Four simple steps to start exploring the platform.</p>
+      <div class="rewards-grid">
+        <div class="reward-card">
+          <i class="fas fa-user-plus"></i>
+          <h3>1. Create Account</h3>
+          <p>Register in seconds. No real financial details required.</p>
+        </div>
+        <div class="reward-card">
+          <i class="fas fa-wallet"></i>
+          <h3>2. Simulate a Deposit</h3>
+          <p>Add demo funds to your dashboard to explore investment plans.</p>
+        </div>
+        <div class="reward-card">
+          <i class="fas fa-tasks"></i>
+          <h3>3. Complete Tasks</h3>
+          <p>Browse the task marketplace and earn simulated rewards.</p>
+        </div>
+        <div class="reward-card">
+          <i class="fas fa-chart-line"></i>
+          <h3>4. Track & Withdraw</h3>
+          <p>Monitor your progress and simulate withdrawals anytime.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="landing-section container" id="faq">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div style="max-width:720px;">
+        <details class="faq-item" open>
+          <summary>Is this a real financial platform?</summary>
+          <p>No. NairaVault is a frontend-only prototype. All transactions, balances, and rewards are simulated. No real money is ever transferred, and no banking APIs are connected.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do I need to provide real payment details?</summary>
+          <p>No. You can explore the entire platform using demo data. We never request real PINs, OTPs, or card security codes.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How are rewards calculated?</summary>
+          <p>Rewards are simulated based on the tasks you complete and the plans you join. They are clearly labelled as demo transactions throughout the platform.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I withdraw money?</summary>
+          <p>You can simulate a withdrawal request, but no real funds are moved. The withdrawal record will show as a demo transaction.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is my data safe?</summary>
+          <p>This is a frontend prototype. Any information you enter is stored locally in your browser (localStorage) for demo purposes only and is not transmitted anywhere.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="landing-section container" id="contact">
+      <h2 class="section-title">Need Support?</h2>
+      <p class="section-sub">This is a demo. For questions about the prototype, reach out to the developer.</p>
+      <div class="reward-card" style="max-width:400px;">
+        <i class="fas fa-envelope"></i>
+        <h3>support@nairavault.demo</h3>
+        <p>We typically respond within 24 hours (simulated).</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== DASHBOARD (hidden by default) ========== -->
+  <div class="dashboard container" id="dashboardPage">
+    <!-- Dashboard Home -->
+    <div class="page-section active" id="dashHome">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <div>
+          <h1 style="font-size:1.6rem;">Welcome back, <span id="userNameDisplay">Demo User</span></h1>
+          <p style="color:var(--text-secondary); font-size:0.9rem;">Here's your simulated financial overview.</p>
+        </div>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE</span>
+      </div>
+
+      <div class="dashboard-grid">
+        <div>
+          <!-- Balance Cards -->
+          <div class="balance-cards">
+            <div class="balance-card">
+              <div class="label">Available Balance</div>
+              <div class="amount accent" id="availBalance">₦0</div>
+            </div>
+            <div class="balance-card">
+              <div class="label">Total Deposits</div>
+              <div class="amount" id="totalDeposits">₦0</div>
+            </div>
+            <div class="balance-card">
+              <div class="label">Simulated Rewards</div>
+              <div class="amount accent" id="totalRewards">₦0</div>
+            </div>
+            <div class="balance-card">
+              <div class="label">Pending Rewards</div>
+              <div class="amount" id="pendingRewards">₦0</div>
+            </div>
+            <div class="balance-card">
+              <div class="label">Total Withdrawals</div>
+              <div class="amount" id="totalWithdrawals">₦0</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="quick-actions">
+            <button class="quick-action" onclick="simulateDeposit()">
+              <i class="fas fa-plus-circle"></i> Deposit
+            </button>
+            <button class="quick-action" onclick="showPage('withdraw')">
+              <i class="fas fa-arrow-up"></i> Withdraw
+            </button>
+            <button class="quick-action" onclick="showPage('plans')">
+              <i class="fas fa-chart-pie"></i> Plans
+            </button>
+            <button class="quick-action" onclick="showPage('tasks')">
+              <i class="fas fa-tasks"></i> Tasks
+            </button>
+            <button class="quick-action" onclick="showPage('airtime')">
+              <i class="fas fa-phone"></i> Airtime
+            </button>
+            <button class="quick-action" onclick="showPage('data')">
+              <i class="fas fa-wifi"></i> Data
+            </button>
+            <button class="quick-action" onclick="showPage('subscriptions')">
+              <i class="fas fa-tv"></i> Subscriptions
+            </button>
+            <button class="quick-action" onclick="showPage('affiliate')">
+              <i class="fas fa-share-alt"></i> Affiliate
+            </button>
+            <button class="quick-action" onclick="showPage('orders')">
+              <i class="fas fa-shopping-bag"></i> Orders
+            </button>
+            <button class="quick-action" onclick="showPage('profile')">
+              <i class="fas fa-credit-card"></i> Payment
+            </button>
+          </div>
+
+          <!-- Chart -->
+          <div class="chart-container">
+            <div class="flex-between" style="margin-bottom:12px;">
+              <span style="font-weight:600;">Transaction Overview</span>
+              <span class="badge badge-info">Simulated</span>
+            </div>
+            <canvas id="txChart"></canvas>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="activity-list">
+            <div class="flex-between" style="margin-bottom:12px;">
+              <span style="font-weight:600;">Recent Activity</span>
+              <button class="btn btn-outline btn-sm" onclick="showPage('transactions')">View All</button>
+            </div>
+            <div id="recentActivityList">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div>
+          <div class="sidebar-card">
+            <h4><i class="fas fa-chart-simple" style="color:var(--accent);"></i> Quick Stats</h4>
+            <div class="stat-row">
+              <span>Tasks Completed</span>
+              <span class="value" id="tasksCompleted">0</span>
+            </div>
+            <div class="stat-row">
+              <span>Active Plans</span>
+              <span class="value" id="activePlans">0</span>
+            </div>
+            <div class="stat-row">
+              <span>Affiliate Clicks</span>
+              <span class="value" id="affiliateClicks">0</span>
+            </div>
+          </div>
+          <div class="sidebar-card">
+            <h4><i class="fas fa-bell" style="color:var(--accent);"></i> Notifications</h4>
+            <div id="sidebarNotifs">
+              <p style="color:var(--text-secondary); font-size:0.85rem;">No new notifications.</p>
+            </div>
+          </div>
+          <div class="sidebar-card">
+            <h4><i class="fas fa-shield-halved" style="color:var(--accent);"></i> Security</h4>
+            <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">Never share your PIN, password, OTP, or card security code.</p>
+            <button class="btn btn-outline btn-sm" onclick="showPage('security')">Security Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plans Page -->
+    <div class="page-section" id="plansPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Investment / Task Plans</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE</span>
+      </div>
+      <p class="section-sub">Join a plan with simulated funds. Daily tasks unlock rewards. Returns are not guaranteed.</p>
+      <div class="plans-grid-full" id="plansGridFull">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Tasks Page -->
+    <div class="page-section" id="tasksPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Daily Tasks & Rewards</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE</span>
+      </div>
+      <p class="section-sub">Complete tasks to earn simulated rewards. All transactions are demo.</p>
+      <div class="task-filters" id="taskFilters">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="Affiliate">Affiliate</button>
+        <button class="filter-chip" data-filter="Social Media">Social Media</button>
+        <button class="filter-chip" data-filter="Survey">Surveys</button>
+        <button class="filter-chip" data-filter="Website Visit">Website Visits</button>
+        <button class="filter-chip" data-filter="Promotion">Promotions</button>
+      </div>
+      <div class="task-grid" id="taskGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Affiliate Page -->
+    <div class="page-section" id="affiliatePage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Affiliate Marketing Center</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE</span>
+      </div>
+      <p class="section-sub">Discover products and promotional opportunities. Commissions are simulated.</p>
+      <div class="chart-container" style="margin-bottom:20px;">
+        <div class="flex-between" style="margin-bottom:12px;">
+          <span style="font-weight:600;">Affiliate Earnings (Simulated)</span>
+          <span class="badge badge-info">Demo</span>
+        </div>
+        <canvas id="affiliateChart" style="max-height:160px;"></canvas>
+      </div>
+      <div class="affiliate-grid" id="affiliateGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Airtime Page -->
+    <div class="page-section" id="airtimePage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Buy Airtime</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE — NO REAL RECHARGE</span>
+      </div>
+      <p class="section-sub">Select network and amount. This is a simulated purchase.</p>
+      <div class="glass" style="padding:24px; max-width:500px;">
+        <div class="network-grid" id="airtimeNetworks">
+          <button class="network-btn active" data-network="MTN">MTN</button>
+          <button class="network-btn" data-network="Airtel">Airtel</button>
+          <button class="network-btn" data-network="Glo">Glo</button>
+          <button class="network-btn" data-network="9mobile">9mobile</button>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="airtimePhone" placeholder="e.g. 08012345678" maxlength="11">
+        </div>
+        <div class="form-group">
+          <label>Amount (₦)</label>
+          <input type="number" id="airtimeAmount" placeholder="e.g. 500" min="50" max="50000">
+        </div>
+        <button class="btn btn-primary" style="width:100%;" onclick="purchaseAirtime()">
+          <i class="fas fa-phone"></i> Purchase Airtime (Demo)
+        </button>
+      </div>
+    </div>
+
+    <!-- Data Page -->
+    <div class="page-section" id="dataPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Buy Data</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE — NO REAL DATA</span>
+      </div>
+      <p class="section-sub">Choose a data package. Simulated purchase only.</p>
+      <div class="network-grid" id="dataNetworks" style="max-width:500px;">
+        <button class="network-btn active" data-network="MTN">MTN</button>
+        <button class="network-btn" data-network="Airtel">Airtel</button>
+        <button class="network-btn" data-network="Glo">Glo</button>
+        <button class="network-btn" data-network="9mobile">9mobile</button>
+      </div>
+      <div class="data-grid" id="dataGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Subscriptions Page -->
+    <div class="page-section" id="subPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Monthly Subscriptions</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE</span>
+      </div>
+      <p class="section-sub">Manage everyday digital services. All subscriptions are simulated.</p>
+      <div class="sub-grid" id="subGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Orders Page -->
+    <div class="page-section" id="ordersPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Orders & Task Marketplace</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE</span>
+      </div>
+      <p class="section-sub">Request promotional jobs or browse available tasks. Statuses are simulated.</p>
+      <div id="orderList">
+        <!-- Populated by JS -->
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px;" onclick="openOrderModal()">
+        <i class="fas fa-plus"></i> Place Order
+      </button>
+    </div>
+
+    <!-- Withdrawal Page -->
+    <div class="page-section" id="withdrawPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Withdrawal</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE — NO REAL TRANSFER</span>
+      </div>
+      <div class="glass" style="padding:24px; max-width:540px;">
+        <div class="balance-cards" style="margin-bottom:20px;">
+          <div class="balance-card">
+            <div class="label">Available Balance</div>
+            <div class="amount accent" id="withdrawAvail">₦0</div>
+          </div>
+          <div class="balance-card">
+            <div class="label">Withdrawable Balance</div>
+            <div class="amount" id="withdrawableBal">₦0</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Withdrawal Amount (₦)</label>
+          <input type="number" id="withdrawAmount" placeholder="e.g. 2000" min="500">
+        </div>
+        <div class="form-group">
+          <label>Bank</label>
+          <select id="withdrawBank">
+            <option>Access Bank</option>
+            <option>GTBank</option>
+            <option>First Bank</option>
+            <option>UBA</option>
+            <option>Zenith Bank</option>
+            <option>Opay</option>
+            <option>PalmPay</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Account Number</label>
+          <input type="text" id="withdrawAccount" placeholder="0123456789" maxlength="10">
+        </div>
+        <div class="form-group">
+          <label>Account Name</label>
+          <input type="text" id="withdrawAccountName" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Preferred Payment Method</label>
+          <select id="withdrawMethod">
+            <option>Bank Transfer</option>
+            <option>Mobile Money / Wallet</option>
+          </select>
+        </div>
+        <div class="warning-banner">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Never share your PIN, password, OTP, or card security code. This is a simulated withdrawal.</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;" onclick="confirmWithdrawal()">
+          <i class="fas fa-arrow-up"></i> Withdraw (Demo)
+        </button>
+      </div>
+    </div>
+
+    <!-- Transactions Page -->
+    <div class="page-section" id="transactionsPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Transaction History</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO MODE</span>
+      </div>
+      <div class="task-filters" id="txFilters">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="Deposit">Deposits</button>
+        <button class="filter-chip" data-filter="Withdrawal">Withdrawals</button>
+        <button class="filter-chip" data-filter="Reward">Rewards</button>
+        <button class="filter-chip" data-filter="Task">Tasks</button>
+        <button class="filter-chip" data-filter="Airtime">Airtime</button>
+        <button class="filter-chip" data-filter="Data">Data</button>
+        <button class="filter-chip" data-filter="Subscription">Subscriptions</button>
+        <button class="filter-chip" data-filter="Affiliate">Affiliate</button>
+        <button class="filter-chip" data-filter="Order">Orders</button>
+      </div>
+      <div class="tx-table-wrap">
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Reference</th>
+            </tr>
+          </thead>
+          <tbody id="txTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Notifications Page -->
+    <div class="page-section" id="notificationsPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Notifications</h2>
+        <span class="badge badge-info">Simulated</span>
+      </div>
+      <div id="notifList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Profile & Payment -->
+    <div class="page-section" id="profilePage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Profile & Payment Methods</h2>
+        <span class="badge badge-warning"><i class="fas fa-flask"></i> DEMO DATA</span>
+      </div>
+      <div class="dashboard-grid">
+        <div>
+          <div class="glass" style="padding:24px;">
+            <h3 style="margin-bottom:16px;">Personal Information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="profileFullName" placeholder="Demo User">
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="profilePhone" placeholder="08012345678">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="profileEmail" placeholder="demo@nairavault.ng">
+              </div>
+              <div class="form-group">
+                <label>Country</label>
+                <select id="profileCountry">
+                  <option>Nigeria</option>
+                  <option>Ghana</option>
+                  <option>Kenya</option>
+                  <option>South Africa</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+          </div>
+
+          <div class="glass" style="padding:24px; margin-top:20px;">
+            <h3 style="margin-bottom:16px;">Withdrawal Information</h3>
+            <div class="warning-banner">
+              <i class="fas fa-lock"></i>
+              <span>Never share your PIN, password, OTP, or card security code. This data is stored locally for demo only.</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" id="profileBankName" placeholder="Access Bank">
+              </div>
+              <div class="form-group">
+                <label>Account Name</label>
+                <input type="text" id="profileAccountName" placeholder="Demo User">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Account Number</label>
+                <input type="text" id="profileAccountNumber" placeholder="0123456789" maxlength="10">
+              </div>
+              <div class="form-group">
+                <label>Preferred Withdrawal Method</label>
+                <select id="profileWithdrawMethod">
+                  <option>Bank Transfer</option>
+                  <option>Mobile Money / Wallet</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Mobile Money / Wallet Option</label>
+              <input type="text" id="profileMobileMoney" placeholder="e.g. Opay, PalmPay">
+            </div>
+            <button class="btn btn-primary" onclick="savePaymentInfo()">Save Payment Info</button>
+            <p style="font-size:0.75rem; color:var(--text-secondary); margin-top:12px;">
+              <i class="fas fa-info-circle"></i> Data is stored locally in your browser. Not transmitted to any financial institution.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div class="glass" style="padding:20px;">
+            <h4><i class="fas fa-shield-halved" style="color:var(--accent);"></i> Security</h4>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin:12px 0;">
+              Never share your PIN, password, OTP, or card security code as ordinary profile information.
+            </p>
+            <button class="btn btn-outline btn-sm" style="width:100%; margin-bottom:8px;" onclick="showPage('security')">Security Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Page -->
+    <div class="page-section" id="securityPage">
+      <h2 class="section-title">Security</h2>
+      <p class="section-sub">Manage your account security. All actions are simulated.</p>
+      <div class="glass" style="padding:24px; max-width:540px;">
+        <div class="form-group">
+          <label>Change Password</label>
+          <input type="password" id="newPassword" placeholder="New password">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" id="confirmNewPassword" placeholder="Confirm new password">
+        </div>
+        <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+        <hr style="border-color:var(--glass-border); margin:24px 0;">
+        <h4 style="margin-bottom:12px;">Two-Factor Authentication</h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">Add an extra layer of security (simulated).</p>
+        <button class="btn btn-outline" onclick="toggle2FA()" id="twoFABtn">Enable 2FA (Demo)</button>
+        <hr style="border-color:var(--glass-border); margin:24px 0;">
+        <h4 style="margin-bottom:12px;">Login Activity</h4>
+        <div class="stat-row">
+          <span>Current Session</span>
+          <span class="value">This device</span>
+        </div>
+        <div class="stat-row">
+          <span>Last Login</span>
+          <span class="value">Just now</span>
+        </div>
+        <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="logoutAll()">Logout from all devices</button>
+      </div>
+    </div>
+
+    <!-- Admin Page (simple demo) -->
+    <div class="page-section" id="adminPage">
+      <div class="flex-between" style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin:0;">Admin Dashboard</h2>
+        <span class="badge badge-info">Demo Admin</span>
+      </div>
+      <p class="section-sub">Platform statistics and management (simulated).</p>
+      <div class="balance-cards" style="margin-bottom:20px;">
+        <div class="balance-card">
+          <div class="label">Total Users</div>
+          <div class="amount">1,248</div>
+        </div>
+        <div class="balance-card">
+          <div class="label">Simulated Deposits</div>
+          <div class="amount accent">₦4.2M</div>
+        </div>
+        <div class="balance-card">
+          <div class="label">Simulated Withdrawals</div>
+          <div class="amount">₦1.8M</div>
+        </div>
+        <div class="balance-card">
+          <div class="label">Active Tasks</div>
+          <div class="amount">86</div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="adminChart" style="max-height:200px;"></canvas>
+      </div>
+      <div class="tx-table-wrap" style="margin-top:20px;">
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Plan</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>demo_user1</td><td>Starter</td><td>₦1,000</td><td><span class="badge badge-accent">Active</span></td></tr>
+            <tr><td>demo_user2</td><td>Growth</td><td>₦3,000</td><td><span class="badge badge-accent">Active</span></td></tr>
+            <tr><td>demo_user3</td><td>Premium</td><td>₦6,000</td><td><span class="badge badge-warning">Pending</span></td></tr>
+            <tr><td>demo_user4</td><td>Basic</td><td>₦2,000</td><td><span class="badge badge-accent">Active</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== AUTH MODAL ========== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal">
+      <div class="flex-between" style="margin-bottom:16px;">
+        <h2 id="authTitle">Create Account</h2>
+        <button class="btn-icon" onclick="closeAuthModal()" style="color:var(--text-secondary);"><i class="fas fa-times"></i></button>
+      </div>
+      <p class="sub" id="authSub">Join the demo platform. No real financial details required.</p>
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div id="registerFields">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="regFullName" placeholder="John Doe">
+            <div class="form-error" id="errFullName">Please enter your full name</div>
+          </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="regUsername" placeholder="johndoe">
+            <div class="form-error" id="errUsername">Username is required</div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="regEmail" placeholder="john@example.com">
+            <div class="form-error" id="errEmail">Enter a valid email</div>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="regPhone" placeholder="08012345678" maxlength="11">
+            <div class="form-error" id="errPhone">Enter a valid 11-digit phone number</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="regPassword" placeholder="••••••••">
+              <div class="form-error" id="errPassword">Min 6 characters</div>
+            </div>
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <input type="password" id="regConfirm" placeholder="••••••••">
+              <div class="form-error" id="errConfirm">Passwords don't match</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" id="regDob">
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <select id="regCountry">
+                <option>Nigeria</option>
+                <option>Ghana</option>
+                <option>Kenya</option>
+                <option>South Africa</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Referral Code (optional)</label>
+            <input type="text" id="regReferral" placeholder="e.g. NV2024">
+          </div>
+        </div>
+
+        <div id="loginFields" style="display:none;">
+          <div class="form-group">
+            <label>Username or Email</label>
+            <input type="text" id="loginUser" placeholder="demo@nairavault.ng">
+            <div class="form-error" id="errLoginUser">Enter username or email</div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••">
+            <div class="form-error" id="errLoginPassword">Password required</div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;" id="authSubmitBtn">
+          Create Account
+        </button>
+      </form>
+      <p style="text-align:center; margin-top:16px; font-size:0.85rem; color:var(--text-secondary);">
+        <span id="authSwitchText">Already have an account?</span>
+        <a href="#" onclick="toggleAuthMode(); return false;" style="color:var(--accent); font-weight:600;" id="authSwitchLink">Login</a>
+      </p>
+      <div class="demo-banner" style="margin-top:16px; justify-content:center; width:100%;">
+        <i class="fas fa-flask"></i> Demo — no real money
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== BOTTOM NAV (MOBILE) ========== -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="bottom-nav-item active" onclick="showPage('dashboard')" data-page="dashboard">
+      <i class="fas fa-home"></i> Home
+    </button>
+    <button class="bottom-nav-item" onclick="showPage('plans')" data-page="plans">
+      <i class="fas fa-chart-pie"></i> Plans
+    </button>
+    <button class="bottom-nav-item" onclick="showPage('tasks')" data-page="tasks">
+      <i class="fas fa-tasks"></i> Tasks
+    </button>
+    <button class="bottom-nav-item" onclick="showPage('transactions')" data-page="transactions">
+      <i class="fas fa-receipt"></i> History
+    </button>
+    <button class="bottom-nav-item" onclick="showPage('profile')" data-page="profile">
+      <i class="fas fa-user"></i> Profile
+    </button>
+  </nav>
+
+  <script>
+    // ============================================================
+    //  DEMO STATE & LOCALSTORAGE
+    // ============================================================
+    const DEMO_STATE_KEY = 'nairavault_demo_state';
+
+    const defaultState = {
+      user: {
+        fullName: 'Demo User',
+        username: 'demouser',
+        email: 'demo@nairavault.ng',
+        phone: '08012345678',
+        country: 'Nigeria',
+        dob: '1995-01-01',
+        referral: '',
+        isLoggedIn: false,
+        twoFA: false,
+      },
+      balance: {
+        available: 12450,
+        totalDeposits: 8000,
+        totalRewards: 3200,
+        pendingRewards: 750,
+        totalWithdrawals: 2000,
+      },
+      transactions: [
+        { date: '2025-03-01 10:30', desc: 'Task completed — Social Media Engagement', amount: 150, type: 'Task', status: 'Demo', ref: 'TXN-001' },
+        { date: '2025-03-01 09:15', desc: 'Data subscription — MTN 2GB', amount: -500, type: 'Data', status: 'Demo', ref: 'TXN-002' },
+        { date: '2025-02-28 18:45', desc: 'Demo withdrawal to Access Bank', amount: -2000, type: 'Withdrawal', status: 'Demo', ref: 'TXN-003' },
+        { date: '2025-02-28 14:20', desc: 'Simulated deposit', amount: 5000, type: 'Deposit', status: 'Demo', ref: 'TXN-004' },
+        { date: '2025-02-27 11:00', desc: 'Reward from Starter Plan', amount: 50, type: 'Reward', status: 'Demo', ref: 'TXN-005' },
+        { date: '2025-02-27 08:30', desc: 'Airtime purchase — Airtel ₦200', amount: -200, type: 'Airtime', status: 'Demo', ref: 'TXN-006' },
+      ],
+      tasks: [
+        { id: 1, title: 'Share MTN Campaign', desc: 'Share the MTN promotional post on your social media and submit the link.', reward: 150, time: '5 min', difficulty: 'Easy', slots: 50, category: 'Social Media', status: 'available' },
+        { id: 2, title: 'Visit Partner Website', desc: 'Visit our partner website, explore their products, and answer a short survey.', reward: 200, time: '10 min', difficulty: 'Easy', slots: 30, category: 'Website Visit', status: 'available' },
+        { id: 3, title: 'Product Promotion — Gadget', desc: 'Create a short promotional video or post about a new gadget.', reward: 500, time: '20 min', difficulty: 'Medium', slots: 15, category: 'Promotion', status: 'available' },
+        { id: 4, title: 'Affiliate Marketing Task', desc: 'Sign up for the affiliate program, copy your tracking link, and share it.', reward: 350, time: '15 min', difficulty: 'Medium', slots: 40, category: 'Affiliate', status: 'available' },
+        { id: 5, title: 'Survey: Consumer Habits', desc: 'Complete a 5-minute survey about your online shopping habits.', reward: 100, time: '5 min', difficulty: 'Easy', slots: 100, category: 'Survey', status: 'available' },
+        { id: 6, title: 'App/Product Discovery', desc: 'Download a demo app, explore it, and leave a review.', reward: 250, time: '10 min', difficulty: 'Easy', slots: 25, category: 'Website Visit', status: 'available' },
+      ],
+      plans: [
+        { id: 1, amount: 1000, name: 'Starter', dailyReward: 5, duration: 7, requirements: 'Complete 1 task daily' },
+        { id: 2, amount: 2000, name: 'Basic', dailyReward: 6, duration: 10, requirements: 'Complete 2 tasks daily' },
+        { id: 3, amount: 3000, name: 'Growth', dailyReward: 7, duration: 14, requirements: 'Complete 2 tasks daily' },
+        { id: 4, amount: 4000, name: 'Advanced', dailyReward: 8, duration: 21, requirements: 'Complete 3 tasks daily' },
+        { id: 5, amount: 6000, name: 'Premium', dailyReward: 10, duration: 30, requirements: 'Complete 4 tasks daily' },
+      ],
+      affiliateOffers: [
+        { id: 1, name: 'Jumia Affiliate', desc: 'Earn up to 8% commission on every sale you refer.', commission: '8%', link: 'https://nairavault.demo/ref/jumia', status: 'Active' },
+        { id: 2, name: 'Konga Promo', desc: 'Promote Konga products and earn 6% commission.', commission: '6%', link: 'https://nairavault.demo/ref/konga', status: 'Active' },
+        { id: 3, name: 'Netflix Gift Cards', desc: 'Sell Netflix gift cards and earn 5% commission.', commission: '5%', link: 'https://nairavault.demo/ref/netflix', status: 'Active' },
+        { id: 4, name: 'Paystack Starter', desc: 'Refer businesses to Paystack and earn ₦2,000 per signup.', commission: '₦2,000', link: 'https://nairavault.demo/ref/paystack', status: 'Active' },
+      ],
+      subscriptions: [
+        { id: 1, service: 'Netflix', category: 'Streaming', price: 4400, renewal: '2025-04-01', status: 'Active', benefits: 'Unlimited movies & TV shows' },
+        { id: 2, service: 'Spotify Premium', category: 'Entertainment', price: 900, renewal: '2025-03-15', status: 'Active', benefits: 'Ad-free music, offline downloads' },
+        { id: 3, service: 'Coursera Plus', category: 'Education', price: 15000, renewal: '2025-05-01', status: 'Pending', benefits: 'Unlimited access to 7,000+ courses' },
+        { id: 4, service: 'Google One', category: 'Cloud Storage', price: 1400, renewal: '2025-03-20', status: 'Active', benefits: '100GB cloud storage' },
+        { id: 5, service: 'Microsoft 365', category: 'Productivity', price: 3500, renewal: '2025-04-10', status: 'Active', benefits: 'Office apps + 1TB OneDrive' },
+      ],
+      notifications: [
+        { icon: 'fa-check-circle', color: 'var(--accent)', title: 'Task completed', desc: 'You earned ₦150 from Social Media Engagement.', time: '2h ago' },
+        { icon: 'fa-gift', color: 'var(--info)', title: 'Reward received', desc: '₦50 reward from Starter Plan credited.', time: '1d ago' },
+        { icon: 'fa-refresh', color: 'var(--warning)', title: 'Subscription renewal', desc: 'Your Spotify Premium renews in 3 days.', time: '1d ago' },
+        { icon: 'fa-arrow-up', color: 'var(--danger)', title: 'Withdrawal status', desc: 'Your demo withdrawal of ₦2,000 is processing.', time: '2d ago' },
+        { icon: 'fa-bullhorn', color: 'var(--accent)', title: 'New affiliate campaign', desc: 'Jumia Affiliate is now live. Earn 8% commission.', time: '3d ago' },
+      ],
+      affiliateClicks: 24,
+      tasksCompleted: 3,
+      activePlans: 1,
+      orders: [
+        { id: 1, type: 'Social Media Promotion', desc: 'Promote our new product on Instagram and Twitter.', reward: 500, status: 'Available', deadline: '2025-03-10' },
+        { id: 2, type: 'Product Promotion', desc: 'Create a review video for our latest gadget.', reward: 1000, status: 'Available', deadline: '2025-03-15' },
+        { id: 3, type: 'Affiliate Campaign', desc: 'Run a 3-day affiliate campaign for our partner.', reward: 750, status: 'Available', deadline: '2025-03-20' },
+      ],
+    };
+
+    let state = JSON.parse(localStorage.getItem(DEMO_STATE_KEY)) || JSON.parse(JSON.stringify(defaultState));
+
+    function saveState() {
+      localStorage.setItem(DEMO_STATE_KEY, JSON.stringify(state));
+    }
+
+    // ============================================================
+    //  UTILITY FUNCTIONS
+    // ============================================================
+    function formatNaira(amount) {
+      return '₦' + Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      if (type === 'error') toast.style.borderLeftColor = 'var(--danger)';
+      if (type === 'warning') toast.style.borderLeftColor = 'var(--warning)';
+      toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}" style="color:${type === 'success' ? 'var(--accent)' : type === 'error' ? 'var(--danger)' : 'var(--warning)'}; margin-right:8px;"></i>${message}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // ============================================================
+    //  NAVIGATION
+    // ============================================================
+    function showPage(page) {
+      // Hide all pages
+      document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+      document.getElementById('landingPage').style.display = 'none';
+      document.getElementById('dashboardPage').classList.remove('active');
+
+      if (page === 'landing') {
+        document.getElementById('landingPage').style.display = 'block';
+        document.getElementById('bottomNav').style.display = 'none';
+        return;
+      }
+
+      if (page === 'dashboard') {
+        document.getElementById('dashboardPage').classList.add('active');
+        document.getElementById('dashHome').classList.add('active');
+        document.getElementById('bottomNav').style.display = 'flex';
+        updateDashboardUI();
+        return;
+      }
+
+      // For dashboard sub-pages
+      if (!state.user.isLoggedIn) {
+        openAuthModal('login');
+        showToast('Please login to access the dashboard', 'warning');
+        return;
+      }
+
+      document.getElementById('dashboardPage').classList.add('active');
+      document.getElementById('bottomNav').style.display = 'flex';
+
+      const pageMap = {
+        'plans': 'plansPage',
+        'tasks': 'tasksPage',
+        'affiliate': 'affiliatePage',
+        'airtime': 'airtimePage',
+        'data': 'dataPage',
+        'subscriptions': 'subPage',
+        'orders': 'ordersPage',
+        'withdraw': 'withdrawPage',
+        'transactions': 'transactionsPage',
+        'notifications': 'notificationsPage',
+        'profile': 'profilePage',
+        'security': 'securityPage',
+        'admin': 'adminPage',
+      };
+
+      const targetId = pageMap[page];
+      if (targetId) {
+        document.getElementById(targetId).classList.add('active');
+        // Update bottom nav
+        document.querySelectorAll('.bottom-nav-item').forEach(item => {
+          item.classList.toggle('active', item.dataset.page === page);
+        });
+        // Refresh page-specific content
+        if (page === 'plans') renderPlansFull();
+        if (page === 'tasks') renderTasks();
+        if (page === 'affiliate') renderAffiliate();
+        if (page === 'data') renderDataPackages();
+        if (page === 'subscriptions') renderSubscriptions();
+        if (page === 'orders') renderOrders();
+        if (page === 'transactions') renderTransactions();
+        if (page === 'notifications') renderNotifications();
+        if (page === 'withdraw') updateWithdrawPage();
+        if (page === 'profile') loadProfile();
+      }
+    }
+
+    // ============================================================
+    //  THEME TOGGLE
+    // ============================================================
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      const icon = document.getElementById('themeIcon');
+      if (document.body.classList.contains('light')) {
+        icon.className = 'fas fa-sun';
+      } else {
+        icon.className = 'fas fa-moon';
+      }
+      localStorage.setItem('nairavault_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+
+    // Load theme
+    if (localStorage.getItem('nairavault_theme') === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('themeIcon').className = 'fas fa-sun';
+    }
+
+    // ============================================================
+    //  AUTH MODAL
+    // ============================================================
+    let authMode = 'register';
+
+    function openAuthModal(mode) {
+      authMode = mode;
+      document.getElementById('authModal').classList.add('active');
+      updateAuthModalUI();
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+    }
+
+    function toggleAuthMode() {
+      authMode = authMode === 'register' ? 'login' : 'register';
+      updateAuthModalUI();
+    }
+
+    function updateAuthModalUI() {
+      const isRegister = authMode === 'register';
+      document.getElementById('authTitle').textContent = isRegister ? 'Create Account' : 'Welcome Back';
+      document.getElementById('authSub').textContent = isRegister ? 'Join the demo platform. No real financial details required.' : 'Login to your demo dashboard.';
+      document.getElementById('registerFields').style.display = isRegister ? 'block' : 'none';
+      document.getElementById('loginFields').style.display = isRegister ? 'none' : 'block';
+      document.getElementById('authSubmitBtn').textContent = isRegister ? 'Create Account' : 'Login';
+      document.getElementById('authSwitchText').textContent = isRegister ? 'Already have an account?' : "Don't have an account?";
+      document.getElementById('authSwitchLink').textContent = isRegister ? 'Login' : 'Create Account';
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      if (authMode === 'register') {
+        // Validate
+        const fullName = document.getElementById('regFullName').value.trim();
+        const username = document.getElementById('regUsername').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirm = document.getElementById('regConfirm').value;
+
+        let valid = true;
+        document.querySelectorAll('.form-error').forEach(el => el.style.display = 'none');
+
+        if (!fullName) { document.getElementById('errFullName').style.display = 'block'; valid = false; }
+        if (!username) { document.getElementById('errUsername').style.display = 'block'; valid = false; }
+        if (!email || !email.includes('@')) { document.getElementById('errEmail').style.display = 'block'; valid = false; }
+        if (!phone || phone.length !== 11) { document.getElementById('errPhone').style.display = 'block'; valid = false; }
+        if (password.length < 6) { document.getElementById('errPassword').style.display = 'block'; valid = false; }
+        if (password !== confirm) { document.getElementById('errConfirm').style.display = 'block'; valid = false; }
+
+        if (!valid) return;
+
+        // Register
+        state.user.fullName = fullName;
+        state.user.username = username;
+        state.user.email = email;
+        state.user.phone = phone;
+        state.user.country = document.getElementById('regCountry').value;
+        state.user.dob = document.getElementById('regDob').value;
+        state.user.referral = document.getElementById('regReferral').value;
+        state.user.isLoggedIn = true;
+        saveState();
+
+        closeAuthModal();
+        showPage('dashboard');
+        updateDashboardUI();
+        showToast('Account created successfully! Welcome to NairaVault (Demo).');
+      } else {
+        // Login — accept any credentials for demo
+        const loginUser = document.getElementById('loginUser').value.trim();
+        const loginPass = document.getElementById('loginPassword').value;
+        if (!loginUser) { document.getElementById('errLoginUser').style.display = 'block'; return; }
+        if (!loginPass) { document.getElementById('errLoginPassword').style.display = 'block'; return; }
+
+        state.user.isLoggedIn = true;
+        saveState();
+        closeAuthModal();
+        showPage('dashboard');
+        updateDashboardUI();
+        showToast('Logged in successfully (Demo).');
+      }
+    }
+
+    // ============================================================
+    //  DASHBOARD UI UPDATES
+    // ============================================================
+    function updateDashboardUI() {
+      const b = state.balance;
+      document.getElementById('availBalance').textContent = formatNaira(b.available);
+      document.getElementById('totalDeposits').textContent = formatNaira(b.totalDeposits);
+      document.getElementById('totalRewards').textContent = formatNaira(b.totalRewards);
+      document.getElementById('pendingRewards').textContent = formatNaira(b.pendingRewards);
+      document.getElementById('totalWithdrawals').textContent = formatNaira(b.totalWithdrawals);
+      document.getElementById('userNameDisplay').textContent = state.user.fullName || 'Demo User';
+      document.getElementById('tasksCompleted').textContent = state.tasksCompleted;
+      document.getElementById('activePlans').textContent = state.activePlans;
+      document.getElementById('affiliateClicks').textContent = state.affiliateClicks;
+
+      // Withdraw page
+      document.getElementById('withdrawAvail').textContent = formatNaira(b.available);
+      document.getElementById('withdrawableBal').textContent = formatNaira(Math.max(0, b.available - 500));
+
+      // Recent activity
+      const recent = state.transactions.slice(0, 4);
+      const container = document.getElementById('recentActivityList');
+      container.innerHTML = recent.map(tx => `
+        <div class="activity-item">
+          <div class="desc">
+            ${tx.desc}
+            <small>${tx.date} · ${tx.status}</small>
+          </div>
+          <div class="amt ${tx.amount >= 0 ? 'positive' : 'negative'}">${tx.amount >= 0 ? '+' : ''}${formatNaira(tx.amount)}</div>
+        </div>
+      `).join('');
+
+      // Sidebar notifications
+      const notifContainer = document.getElementById('sidebarNotifs');
+      if (state.notifications.length > 0) {
+        notifContainer.innerHTML = state.notifications.slice(0, 3).map(n => `
+          <div style="display:flex; gap:8px; padding:8px 0; border-bottom:1px solid var(--glass-border); font-size:0.8rem;">
+            <i class="fas ${n.icon}" style="color:${n.color}; margin-top:2px;"></i>
+            <div><strong>${n.title}</strong><br><span style="color:var(--text-secondary);">${n.desc}</span></div>
+          </div>
+        `).join('');
+      } else {
+        notifContainer.innerHTML = '<p style="color:var(--text-secondary); font-size:0.85rem;">No new notifications.</p>';
+      }
+
+      // Update chart
+      updateChart();
+    }
+
+    // ============================================================
+    //  CHART
+    // ============================================================
+    let txChartInstance = null;
+
+    function updateChart() {
+      const ctx = document.getElementById('txChart');
+      if (!ctx) return;
+      if (txChartInstance) txChartInstance.destroy();
+
+      const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const data = [200, 450, 300, 600, 400, 800, 650];
+
+      txChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Simulated Activity (₦)',
+            data: data,
+            borderColor: '#00d68f',
+            backgroundColor: 'rgba(0, 214, 143, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 3,
+            pointBackgroundColor: '#00d68f',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#9aa4b8', font: { size: 10 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#9aa4b8', font: { size: 10 } } },
+          }
+        }
+      });
+    }
+
+    // ============================================================
+    //  PLANS
+    // ============================================================
+    function renderPlansFull() {
+      const grid = document.getElementById('plansGridFull');
+      if (!grid) return;
+      grid.innerHTML = state.plans.map(p => `
+        <div class="plan-card">
+          <div class="plan-amount">₦${p.amount.toLocaleString()}</div>
+          <div class="plan-name">${p.name}</div>
+          <ul>
+            <li><i class="fas fa-check"></i> ${p.dailyReward}% daily reward</li>
+            <li><i class="fas fa-check"></i> ${p.duration} days duration</li>
+            <li><i class="fas fa-check"></i> ${p.requirements}</li>
+            <li><i class="fas fa-check"></i> Simulated rewards only</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%;" onclick="selectPlan(${p.id})">Join Plan</button>
+        </div>
+      `).join('');
+    }
+
+    function selectPlan(planId) {
+      const plan = state.plans.find(p => p.id === planId);
+      if (!plan) return;
+      const totalReward = plan.amount * (plan.dailyReward / 100) * plan.duration;
+
+      if (confirm(`Join ${plan.name} Plan?\n\nAmount: ₦${plan.amount.toLocaleString()}\nDaily Reward: ${plan.dailyReward}%\nDuration: ${plan.duration} days\nTotal Potential Reward: ₦${totalReward.toLocaleString()}\nRequirements: ${plan.requirements}\n\n⚠️ Returns are not guaranteed. This is a demo simulation.`)) {
+        if (state.balance.available >= plan.amount) {
+          state.balance.available -= plan.amount;
+          state.balance.totalDeposits += plan.amount;
+          state.activePlans += 1;
+          state.transactions.unshift({
+            date: new Date().toISOString().slice(0,16).replace('T', ' '),
+            desc: `Joined ${plan.name} Plan`,
+            amount: -plan.amount,
+            type: 'Deposit',
+            status: 'Demo',
+            ref: 'TXN-' + Date.now().toString().slice(-6),
+          });
+          saveState();
+          updateDashboardUI();
+          showToast(`Joined ${plan.name} Plan (Demo). ₦${plan.amount.toLocaleString()} allocated.`);
+        } else {
+          showToast('Insufficient demo balance. Please simulate a deposit first.', 'error');
+        }
+      }
+    }
+
+    // ============================================================
+    //  TASKS
+    // ============================================================
+    let taskFilter = 'all';
+
+    function renderTasks() {
+      const grid = document.getElementById('taskGrid');
+      if (!grid) return;
+      const filtered = taskFilter === 'all' ? state.tasks : state.tasks.filter(t => t.category === taskFilter);
+      grid.innerHTML = filtered.map(t => `
+        <div class="task-card">
+          <div class="task-header">
+            <span class="task-title">${t.title}</span>
+            <span class="badge badge-accent">${t.category}</span>
+          </div>
+          <div class="task-desc">${t.desc}</div>
+          <div class="task-meta">
+            <span><i class="fas fa-clock"></i> ${t.time}</span>
+            <span><i class="fas fa-signal"></i> ${t.difficulty}</span>
+            <span><i class="fas fa-users"></i> ${t.slots} slots</span>
+          </div>
+          <div class="flex-between">
+            <span class="task-reward">+${formatNaira(t.reward)}</span>
+            <span class="badge ${t.status === 'available' ? 'badge-accent' : 'badge-warning'}">${t.status}</span>
+          </div>
+          <div class="task-actions">
+            <button class="btn btn-primary btn-sm" onclick="completeTask(${t.id})">Start Task</button>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Task details (demo).', 'info')">Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function completeTask(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      if (task.status !== 'available') { showToast('Task already completed.', 'warning'); return; }
+
+      task.status = 'completed';
+      task.slots -= 1;
+      state.balance.available += task.reward;
+      state.balance.totalRewards += task.reward;
+      state.tasksCompleted += 1;
+      state.transactions.unshift({
+        date: new Date().toISOString().slice(0,16).replace('T', ' '),
+        desc: `Task completed — ${task.title}`,
+        amount: task.reward,
+        type: 'Task',
+        status: 'Demo',
+        ref: 'TXN-' + Date.now().toString().slice(-6),
+      });
+      saveState();
+      renderTasks();
+      updateDashboardUI();
+      showToast(`Task completed! +${formatNaira(task.reward)} (Demo)`);
+    }
+
+    // Task filter
+    document.getElementById('taskFilters')?.addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-chip')) {
+        document.querySelectorAll('#taskFilters .filter-chip').forEach(c => c.classList.remove('active'));
+        e.target.classList.add('active');
+        taskFilter = e.target.dataset.filter;
+        renderTasks();
+      }
+    });
+
+    // ============================================================
+    //  AFFILIATE
+    // ============================================================
+    function renderAffiliate() {
+      const grid = document.getElementById('affiliateGrid');
+      if (!grid) return;
+      grid.innerHTML = state.affiliateOffers.map(o => `
+        <div class="affiliate-card">
+          <div class="affiliate-img"><i class="fas fa-store"></i></div>
+          <h3 style="font-size:1rem;">${o.name}</h3>
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin:8px 0;">${o.desc}</p>
+          <div class="flex-between" style="margin:8px 0;">
+            <span style="font-weight:700; color:var(--accent);">${o.commission}</span>
+            <span class="badge badge-accent">${o.status}</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button class="btn btn-primary btn-sm" onclick="promoteAffiliate(${o.id})">Promote</button>
+            <button class="btn btn-outline btn-sm" onclick="copyLink('${o.link}')">Copy Link</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Affiliate chart
+      const ctx = document.getElementById('affiliateChart');
+      if (ctx) {
+        if (window.affiliateChartInstance) window.affiliateChartInstance.destroy();
+        window.affiliateChartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+              label: 'Simulated Earnings (₦)',
+              data: [1200, 1900, 800, 2400, 1600, 3000],
+              backgroundColor: 'rgba(0, 214, 143, 0.4)',
+              borderColor: '#00d68f',
+              borderWidth: 1,
+              borderRadius: 6,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: '#9aa4b8', font: { size: 10 } } },
+              y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#9aa4b8', font: { size: 10 } } },
+            }
+          }
+        });
+      }
+    }
+
+    function promoteAffiliate(id) {
+      const offer = state.affiliateOffers.find(o => o.id === id);
+      if (!offer) return;
+      state.affiliateClicks += 1;
+      state.balance.available += 50;
+      state.balance.totalRewards += 50;
+      state.transactions.unshift({
+        date: new Date().toISOString().slice(0,16).replace('T', ' '),
+        desc: `Affiliate click — ${offer.name}`,
+        amount: 50,
+        type: 'Affiliate',
+        status: 'Demo',
+        ref: 'TXN-' + Date.now().toString().slice(-6),
+      });
+      saveState();
+      renderAffiliate();
+      updateDashboardUI();
+      showToast(`Affiliate link promoted! +₦50 (Demo)`);
+    }
+
+    function copyLink(link) {
+      navigator.clipboard?.writeText(link).then(() => {
+        showToast('Tracking link copied (Demo).');
+      }).catch(() => {
+        showToast('Link: ' + link, 'info');
+      });
+    }
+
+    // ============================================================
+    //  AIRTIME & DATA
+    // ============================================================
+    let selectedAirtimeNetwork = 'MTN';
+    let selectedDataNetwork = 'MTN';
+
+    document.getElementById('airtimeNetworks')?.addEventListener('click', (e) => {
+      if (e.target.classList.contains('network-btn')) {
+        document.querySelectorAll('#airtimeNetworks .network-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        selectedAirtimeNetwork = e.target.dataset.network;
+      }
+    });
+
+    document.getElementById('dataNetworks')?.addEventListener('click', (e) => {
+      if (e.target.classList.contains('network-btn')) {
+        document.querySelectorAll('#dataNetworks .network-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        selectedDataNetwork = e.target.dataset.network;
+        renderDataPackages();
+      }
+    });
+
+    function purchaseAirtime() {
+      const phone = document.getElementById('airtimePhone').value.trim();
+      const amount = Number(document.getElementById('airtimeAmount').value);
+      if (!phone || phone.length !== 11) { showToast('Enter a valid 11-digit phone number.', 'error'); return; }
+      if (!amount || amount < 50) { showToast('Minimum amount is ₦50.', 'error'); return; }
+      if (state.balance.available < amount) { showToast('Insufficient demo balance.', 'error'); return; }
+
+      state.balance.available -= amount;
+      state.transactions.unshift({
+        date: new Date().toISOString().slice(0,16).replace('T', ' '),
+        desc: `Airtime purchase — ${selectedAirtimeNetwork} ₦${amount}`,
+        amount: -amount,
+        type: 'Airtime',
+        status: 'Demo',
+        ref: 'TXN-' + Date.now().toString().slice(-6),
+      });
+      saveState();
+      updateDashboardUI();
+      showToast(`Airtime purchase simulated: ${selectedAirtimeNetwork} ₦${amount} for ${phone} (Demo)`);
+      document.getElementById('airtimePhone').value = '';
+      document.getElementById('airtimeAmount').value = '';
+    }
+
+    function renderDataPackages() {
+      const grid = document.getElementById('dataGrid');
+      if (!grid) return;
+      const packages = {
+        'MTN': [
+          { size: '1GB', duration: '1 day', price: 300 },
+          { size: '2GB', duration: '3 days', price: 500 },
+          { size: '5GB', duration: '7 days', price: 1500 },
+          { size: '10GB', duration: '30 days', price: 3000 },
+        ],
+        'Airtel': [
+          { size: '1.5GB', duration: '2 days', price: 400 },
+          { size: '3GB', duration: '7 days', price: 800 },
+          { size: '6GB', duration: '14 days', price: 1500 },
+          { size: '12GB', duration: '30 days', price: 3500 },
+        ],
+        'Glo': [
+          { size: '1GB', duration: '1 day', price: 250 },
+          { size: '2.5GB', duration: '3 days', price: 500 },
+          { size: '7GB', duration: '14 days', price: 2000 },
+          { size: '15GB', duration: '30 days', price: 4000 },
+        ],
+        '9mobile': [
+          { size: '1GB', duration: '1 day', price: 280 },
+          { size: '2GB', duration: '3 days', price: 550 },
+          { size: '4GB', duration: '7 days', price: 1200 },
+          { size: '8GB', duration: '30 days', price: 2500 },
+        ],
+      };
+      const pkgs = packages[selectedDataNetwork] || packages['MTN'];
+      grid.innerHTML = pkgs.map(p => `
+        <div class="data-card">
+          <div class="size">${p.size}</div>
+          <div style="font-size:0.8rem; color:var(--text-secondary);">${p.duration}</div>
+          <div class="price">₦${p.price.toLocaleString()}</div>
+          <button class="btn btn-primary btn-sm" onclick="purchaseData('${p.size}', ${p.price})">Subscribe</button>
+        </div>
+      `).join('');
+    }
+
+    function purchaseData(size, price) {
+      if (state.balance.available < price) { showToast('Insufficient demo balance.', 'error'); return; }
+      state.balance.available -= price;
+      state.transactions.unshift({
+        date: new Date().toISOString().slice(0,16).replace('T', ' '),
+        desc: `Data subscription — ${selectedDataNetwork} ${size}`,
+        amount: -price,
+        type: 'Data',
+        status: 'Demo',
+        ref: 'TXN-' + Date.now().toString().slice(-6),
+      });
+      saveState();
+      updateDashboardUI();
+      showToast(`Data subscription simulated: ${selectedDataNetwork} ${size} (Demo)`);
+    }
+
+    // ============================================================
+    //  SUBSCRIPTIONS
+    // ============================================================
+    function renderSubscriptions() {
+      const grid = document.getElementById('subGrid');
+      if (!grid) return;
+      grid.innerHTML = state.subscriptions.map(s => `
+        <div class="sub-card">
+          <div class="sub-icon"><i class="fas fa-tv"></i></div>
+          <h3 style="font-size:1rem;">${s.service}</h3>
+          <div style="font-size:0.8rem; color:var(--text-secondary); margin:4px 0;">${s.category}</div>
+          <div style="font-weight:700; margin:8px 0;">₦${s.price.toLocaleString()}/mo</div>
+          <div style="font-size:0.75rem; color:var(--text-secondary);">Renews: ${s.renewal}</div>
+          <div class="flex-between" style="margin:8px 0;">
+            <span class="badge ${s.status === 'Active' ? 'badge-accent' : 'badge-warning'}">${s.status}</span>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">${s.benefits}</div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-primary btn-sm" onclick="subscribeService(${s.id})">Subscribe</button>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Manage subscription (demo).', 'info')">Manage</button>
+            <button class="btn btn-outline btn-sm" onclick="cancelSubscription(${s.id})">Cancel</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function subscribeService(id) {
+      const sub = state.subscriptions.find(s => s.id === id);
+      if (!sub) return;
+      showToast(`Subscribed to ${sub.service} (Demo). ₦${sub.price.toLocaleString()} simulated.`, 'success');
+    }
+
+    function cancelSubscription(id) {
+      const sub = state.subscriptions.find(s => s.id === id);
+      if (!sub) return;
+      sub.status = 'Cancelled';
+      saveState();
+      renderSubscriptions();
+      showToast(`Cancelled ${sub.service} subscription (Demo).`, 'warning');
+    }
+
+    // ============================================================
+    //  ORDERS
+    // ============================================================
+    function renderOrders() {
+      const container = document.getElementById('orderList');
+      if (!container) return;
+      container.innerHTML = state.orders.map(o => `
+        <div class="order-card">
+          <div class="flex-between">
+            <strong>${o.type}</strong>
+            <span class="badge badge-accent">₦${o.reward.toLocaleString()}</span>
+          </div>
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin:8px 0;">${o.desc}</p>
+          <div class="flex-between">
+            <span style="font-size:0.75rem; color:var(--text-secondary);">Deadline: ${o.deadline}</span>
+            <span class="badge ${o.status === 'Available' ? 'badge-accent' : 'badge-warning'}">${o.status}</span>
+          </div>
+          <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="placeOrder('${o.type}')">Place Order</button>
+        </div>
+      `).join('');
+    }
+
+    function placeOrder(type) {
+      showToast(`Order placed for "${type}" (Demo). Status: Pending → In Progress.`, 'success');
+    }
+
+    function openOrderModal() {
+      const taskType = prompt('Enter task type (e.g. Social Media Promotion):');
+      if (!taskType) return;
+      const desc = prompt('Enter description:');
+      if (!desc) return;
+      const deadline = prompt('Enter deadline (YYYY-MM-DD):') || '2025-04-01';
+      const contact = prompt('Enter contact information:') || state.user.email;
+      state.orders.unshift({
+        id: Date.now(),
+        type: taskType,
+        desc: desc,
+        reward: 500,
+        status: 'Pending',
+        deadline: deadline,
+      });
+      saveState();
+      renderOrders();
+      showToast('Order placed (Demo). Status: Pending → In Progress → Submitted → Approved.');
+    }
+
+    // ============================================================
+    //  WITHDRAWAL
+    // ============================================================
+    function updateWithdrawPage() {
+      document.getElementById('withdrawAvail').textContent = formatNaira(state.balance.available);
+      document.getElementById('withdrawableBal').textContent = formatNaira(Math.max(0, state.balance.available - 500));
+    }
+
+    function confirmWithdrawal() {
+      const amount = Number(document.getElementById('withdrawAmount').value);
+      const bank = document.getElementById('withdrawBank').value;
+      const account = document.getElementById('withdrawAccount').value.trim();
+      const accountName = document.getElementById('withdrawAccountName').value.trim();
+      const method = document.getElementById('withdrawMethod').value;
+
+      if (!amount || amount < 500) { showToast('Minimum withdrawal is ₦500.', 'error'); return; }
+      if (amount > state.balance.available) { showToast('Insufficient demo balance.', 'error'); return; }
+      if (!account || account.length !== 10) { showToast('Enter a valid 10-digit account number.', 'error'); return; }
+      if (!accountName) { showToast('Enter account name.', 'error'); return; }
+
+      const fee = Math.min(100, amount * 0.01);
+      const finalAmount = amount - fee;
+
+      if (confirm(`Confirm Withdrawal (Demo)\n\nAmount: ₦${amount.toLocaleString()}\nFee: ₦${fee.toLocaleString()}\nFinal Amount: ₦${finalAmount.toLocaleString()}\nDestination: ${bank} — ${account}\nMethod: ${method}\n\n⚠️ This is a simulated withdrawal. No real money will be transferred.`)) {
+        state.balance.available -= amount;
+        state.balance.totalWithdrawals += amount;
+        state.transactions.unshift({
+          date: new Date().toISOString().slice(0,16).replace('T', ' '),
+          desc: `Demo withdrawal to ${bank} — ${account}`,
+          amount: -amount,
+          type: 'Withdrawal',
+          status: 'Demo',
+          ref: 'TXN-' + Date.now().toString().slice(-6),
+        });
+        saveState();
+        updateDashboardUI();
+        showToast(`Withdrawal of ₦${amount.toLocaleString()} simulated (Demo).`, 'success');
+        document.getElementById('withdrawAmount').value = '';
+        document.getElementById('withdrawAccount').value = '';
+        document.getElementById('withdrawAccountName').value = '';
+      }
+    }
+
+    // ============================================================
+    //  TRANSACTIONS
+    // ============================================================
+    let txFilter = 'all';
+
+    function renderTransactions() {
+      const tbody = document.getElementById('txTableBody');
+      if (!tbody) return;
+      const filtered = txFilter === 'all' ? state.transactions : state.transactions.filter(t => t.type === txFilter);
+      tbody.innerHTML = filtered.map(tx => `
+        <tr>
+          <td style="font-size:0.8rem; color:var(--text-secondary);">${tx.date}</td>
+          <td>${tx.desc}</td>
+          <td class="${tx.amount >= 0 ? 'amt-pos' : 'amt-neg'}">${tx.amount >= 0 ? '+' : ''}${formatNaira(tx.amount)}</td>
+          <td><span class="badge badge-info">${tx.type}</span></td>
+          <td><span class="badge ${tx.status === 'Completed' ? 'badge-accent' : tx.status === 'Pending' ? 'badge-warning' : tx.status === 'Failed' ? 'badge-danger' : 'badge-info'}">${tx.status}</span></td>
+          <td style="font-size:0.75rem; color:var(--text-secondary);">${tx.ref}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('txFilters')?.addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-chip')) {
+        document.querySelectorAll('#txFilters .filter-chip').forEach(c => c.classList.remove('active'));
+        e.target.classList.add('active');
+        txFilter = e.target.dataset.filter;
+        renderTransactions();
+      }
+    });
+
+    // ============================================================
+    //  NOTIFICATIONS
+    // ============================================================
+    function renderNotifications() {
+      const container = document.getElementById('notifList');
+      if (!container) return;
+      container.innerHTML = state.notifications.map(n => `
+        <div class="notif-item">
+          <div class="notif-icon" style="background:${n.color}22; color:${n.color};">
+            <i class="fas ${n.icon}"></i>
+          </div>
+          <div style="flex:1;">
+            <strong style="font-size:0.9rem;">${n.title}</strong>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:2px;">${n.desc}</p>
+            <span style="font-size:0.7rem; color:var(--text-secondary);">${n.time}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ============================================================
+    //  PROFILE
+    // ============================================================
+    function loadProfile() {
+      document.getElementById('profileFullName').value = state.user.fullName || '';
+      document.getElementById('profilePhone').value = state.user.phone || '';
+      document.getElementById('profileEmail').value = state.user.email || '';
+      document.getElementById('profileCountry').value = state.user.country || 'Nigeria';
+    }
+
+    function saveProfile() {
+      state.user.fullName = document.getElementById('profileFullName').value;
+      state.user.phone = document.getElementById('profilePhone').value;
+      state.user.email = document.getElementById('profileEmail').value;
+      state.user.country = document.getElementById('profileCountry').value;
+      saveState();
+      updateDashboardUI();
+      showToast('Profile saved (Demo).');
+    }
+
+    function savePaymentInfo() {
+      const bank = document.getElementById('profileBankName').value;
+      const accName = document.getElementById('profileAccountName').value;
+      const accNum = document.getElementById('profileAccountNumber').value;
+      const method = document.getElementById('profileWithdrawMethod').value;
+      const mobile = document.getElementById('profileMobileMoney').value;
+      state.user.paymentInfo = { bank, accName, accNum, method, mobile };
+      saveState();
+      showToast('Payment information saved locally (Demo).');
+    }
+
+    // ============================================================
+    //  SECURITY
+    // ============================================================
+    function changePassword() {
+      const newPass = document.getElementById('newPassword').value;
+      const confirm = document.getElementById('confirmNewPassword').value;
+      if (!newPass || newPass.length < 6) { showToast('Password must be at least 6 characters.', 'error'); return; }
+      if (newPass !== confirm) { showToast('Passwords do not match.', 'error'); return; }
+      showToast('Password updated (Demo). In a real app, this would be hashed and stored securely.', 'success');
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmNewPassword').value = '';
+    }
+
+    function toggle2FA() {
+      state.user.twoFA = !state.user.twoFA;
+      saveState();
+      document.getElementById('twoFABtn').textContent = state.user.twoFA ? 'Disable 2FA (Demo)' : 'Enable 2FA (Demo)';
+      showToast(state.user.twoFA ? '2FA enabled (Demo)' : '2FA disabled (Demo)');
+    }
+
+    function logoutAll() {
+      state.user.isLoggedIn = false;
+      saveState();
+      showPage('landing');
+      showToast('Logged out from all devices (Demo).', 'warning');
+    }
+
+    // ============================================================
+    //  SIMULATE DEPOSIT
+    // ============================================================
+    function simulateDeposit() {
+      const amount = prompt('Enter demo deposit amount (₦):', '5000');
+      if (!amount) return;
+      const num = Number(amount);
+      if (num < 100) { showToast('Minimum demo deposit is ₦100.', 'error'); return; }
+      state.balance.available += num;
+      state.balance.totalDeposits += num;
+      state.transactions.unshift({
+        date: new Date().toISOString().slice(0,16).replace('T', ' '),
+        desc: 'Simulated deposit',
+        amount: num,
+        type: 'Deposit',
+        status: 'Demo',
+        ref: 'TXN-' + Date.now().toString().slice(-6),
+      });
+      saveState();
+      updateDashboardUI();
+      showToast(`Simulated deposit of ${formatNaira(num)} added. (Demo)`);
+    }
+
+    // ============================================================
+    //  MOBILE MENU
+    // ============================================================
+    function toggleMobileMenu() {
+      const menu = document.querySelector('.nav-links');
+      if (menu.style.display === 'flex') {
+        menu.style.display = 'none';
+      } else {
+        menu.style.display = 'flex';
+        menu.style.position = 'absolute';
+        menu.style.top = '70px';
+        menu.style.left = '0';
+        menu.style.right = '0';
+        menu.style.background = 'var(--bg-elevated)';
+        menu.style.flexDirection = 'column';
+        menu.style.padding = '20px';
+        menu.style.borderBottom = '1px solid var(--glass-border)';
+        menu.style.zIndex = '99';
+        menu.style.gap = '16px';
+      }
+    }
+
+    // ============================================================
+    //  INIT
+    // ============================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      // If user is logged in, show dashboard
+      if (state.user.isLoggedIn) {
+        showPage('dashboard');
+      } else {
+        showPage('landing');
+      }
+
+      // Add bottom nav admin link (optional)
+      // For demo, we can add a small admin button in the sidebar or header
+      // Let's add it to the dashboard sidebar
+      const sidebar = document.querySelector('#dashHome .sidebar-card:last-child');
+      if (sidebar) {
+        const adminBtn = document.createElement('button');
+        adminBtn.className = 'btn btn-outline btn-sm';
+        adminBtn.style.width = '100%';
+        adminBtn.style.marginTop = '8px';
+        adminBtn.innerHTML = '<i class="fas fa-cog"></i> Admin Dashboard';
+        adminBtn.onclick = () => showPage('admin');
+        sidebar.appendChild(adminBtn);
+      }
+
+      // Render initial data
+      renderPlansFull();
+      renderTasks();
+      renderAffiliate();
+      renderDataPackages();
+      renderSubscriptions();
+      renderOrders();
+      renderTransactions();
+      renderNotifications();
+      updateDashboardUI();
+
+      // Auth switch
+      document.getElementById('authSwitchLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleAuthMode();
+      });
+    });
+
+    // Close modal on overlay click
+    document.getElementById('authModal')?.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('authModal')) closeAuthModal();
+    });
+
+    // Initialize auth modal UI
+    updateAuthModalUI();
+  </script>
+</body>
+</html>
